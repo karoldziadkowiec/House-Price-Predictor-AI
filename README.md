@@ -1,6 +1,8 @@
 # House Price Predictor
+![0](github-img/0.jpg)
+
 ## About project
-The project is a university assignment implemented in a Jupyter Notebook environment. It aims to present a house price predictor specifically tailored for the Polish real estate market based on **neural networks**. The model tries to forecast house prices with high accuracy.
+The project is a university assignment implemented in a **Jupyter Notebook** environment. It aims to present a house price predictor specifically tailored for the Polish real estate market based on **neural networks**. The model tries to forecast house prices with high accuracy.
 
 ## Dataset
 Kaggle page: https://www.kaggle.com/datasets/dawidcegielski/house-prices-in-poland
@@ -28,65 +30,66 @@ Kaggle page: https://www.kaggle.com/datasets/dawidcegielski/house-prices-in-pola
      - **Kaggle** (**csv** file)
 
 ## Solution
-Wczytane dane:
+Imported data:
 
 ![1](github-img/1.png)
 
-Wyświetlenie wczytanych nieruchomości na mapie:
+Displaying loaded properties on the map:
 
 ![2](github-img/2.png)
 
-Histogram ceny za metr kwadratowy:
+Price per square meter histogram:
 
 ![3](github-img/3.png)
 
-Wykres ramka-wąsy ceny za metr kwadratowy w poszczególnych miastach:
+Boxplot chart of prices per square meter in individual cities:
 
 ![4](github-img/4.png)
 
-### Podział danych na wejściowe oraz wyjściowe:
+### Division of data into input and output variable(s):
 
-Zmienne wejściowe:
+Input variables:
+- Quantitative variables: **floor, latitude, longitude, rooms, sq, year, city_Krakow, city_Poznan, city_Warszawa**
+- Qualitative variables: **-**
 
-- Zmienne ilościowe: **floor, latitude, longitude, rooms, sq, year, city_Krakow, city_Poznan, city_Warszawa**
-- Zmienne jakościowe: -
-
-Zmienna wyjściowa
-- **price** (zmienna ilościowa)
+Output variable:
+- **price** (quantitative variable)
 
 ```bash
 X = data[['floor', 'latitude', 'longitude', 'rooms', 'sq', 'year', 'city_Krakow', 'city_Poznan', 'city_Warszawa']]
 y = data['price']
 ```
 
-Histogram dla zmiennej wyjściowej (price):
+Histogram for the output variable (price):
 
 ![5](github-img/5.png)
 
-### Rozwiązywany problem
+### Problem solved
 
-Rozwiązywany problem w tym przypadku to regresja. Celem jest przewidywanie cen nieruchomości na podstawie różnych cech, takich jak lokalizacja, liczba pokoi, metraż, rok budowy itp. W regresji staramy się znaleźć zależność między zmiennymi niezależnymi (cechami) a zmienną zależną (cena) w celu przewidzenia wartości numerycznej, czyli ceny nieruchomości.
+The problem being solved in this case is **regression**. The goal is to predict property prices based on various characteristics such as location, number of rooms, square footage, year of construction, etc. In regression, we try to find the relationship between the independent variables (features) and the dependent variable (price) in order to predict the numerical value, i.e. the price of the property .
 
-### Podział danych na zbiory
-- **Treningowy**: wykorzystywany do uczenia modelu.
-- **Testowy**: służy do oceny skuteczności modelu po jego wytrenowaniu.
+### Dividing data into sets
+- **Training**: used to train the model.
+- **Test**: used to evaluate the performance of the model after it has been trained.
 
 ```bash
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
 ```
 
-### Zastosowane sieci neuronowe
-- *Typ sieci:* Sieć neuronowa typu **Feedforward** (jednokierunkowa), wykorzystywana w regresji.
-- *Architektura sieci:* **5 różnych architektur sieci neuronowych**, z których każda składa się z warstw gęstych. Każdy model różni się liczbą warstw oraz liczbą neuronów w każdej z warstw.
-- *Ilość epok uczenia:* Każdy model jest trenowany przez **100 epok**.
-- *Sposób uczenia sieci:* Na wstępie tworzony jest zestaw modeli, z różnymi architekturami sieci neuronowej. Sieć jest uczona za pomocą optymalizatora **Adam**, który dostosowuje współczynniki wag sieci w celu minimalizacji funkcji błędu średniokwadratowego (**MSE**). Funkcja błędu wykorzystana do treningu to **MSE** (Mean Squared Error), a jako metryka oceny wykorzystane są również **MAE** (Mean Absolute Error) oraz **R2 Score**. Każdy model jest trenowany na danych treningowych przez **100 epok** przy użyciu rozmiaru paczki (**batch size**) równego **32**. Dodatkowo, **20%** danych treningowych jest wykorzystywane jako **zbiór walidacyjny**. Po zakończeniu trenowania każdy model jest oceniany na zbiorze treningowym i testowym. Wyniki predykcji dla zbioru testowego są wizualizowane za pomocą wykresu punktowego, gdzie osie reprezentują rzeczywiste wartości oraz predykcje. Idealny model powinien prezentować się jako linia prosta, która idealnie dopasowuje się do punktów.
-
+### Neural networks used
+- *Network type:* **Feedforward** neural network (unidirectional), used in regression.
+- *Network Architecture:* **5 different neural network architectures**, each consisting of dense layers. Each model differs in the number of layers and the number of neurons in each layer.
+- *Number of training epochs:* Each model is trained for **100 epochs**.
+- *Network training method:* First, a set of models is created with different neural network architectures. The network is trained using the **Adam** optimizer, which adjusts the network's weighting factors to minimize the mean squared error (**MSE**) function. The error function used for training is **MSE** (Mean Squared Error), and **MAE** (Mean Absolute Error) and **R2 Score** are also used as evaluation metrics. Each model is trained on the training data for **100 epochs** using a batch size of **32**. Additionally, **20%** of the training data is used as the **validation set**. After training, each model is evaluated on the training and test sets. The prediction results for the test set are visualized using a scatter plot, where the axes represent the actual values and predictions. The ideal model should appear as a straight line that perfectly aligns with the points.
 
 ```bash
 models = []
 ```
 
 **Model 1**:
+
+A **Sequential** model, which means that the layers are arranged one after the other in a sequence. It consists of **3 dense layers**. The first and second layers each have **64 neurons and ReLU activation**, which means that it applies a non-linear function **ReLU** (Rectified Linear Unit) on its outputs. The third layer has **1 neuron**, which suggests that the model predicts one output value.
+
 ```bash
 model1 = Sequential([
     Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
@@ -97,6 +100,9 @@ models.append(model1)
 ```
 
 **Model 2**:
+
+**Sequential** type model, consisting of **4 dense layers**. The first and second layers each have **128 neurons and ReLU activation** (uses the non-linear ReLU function on its outputs). The third layer has **64 neurons with ReLU activation**. The fourth layer has **1 neuron**.
+
 ```bash
 model2 = Sequential([
     Dense(128, activation='relu', input_shape=(X_train.shape[1],)),
@@ -108,6 +114,9 @@ models.append(model2)
 ```
 
 **Model 3**:
+
+**Sequential** type model, consisting of **3 dense layers**. The first and second layers each have **64 neurons and ReLU activation** (applies a non-linear ReLU function to its outputs). The third layer is a **dropout layer with a value of 0.2**, which means it randomly disables **20%** of neurons during training to prevent overfitting**. The last layer has 1 neuron.
+
 ```bash
 model3 = Sequential([
     Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
@@ -119,6 +128,9 @@ models.append(model3)
 ```
 
 **Model 4**:
+
+**Sequential** type model, consisting of **4 dense layers**. The first layer has **64 neurons with ReLU activation**, the second layer has **128 neurons also with ReLU activation**, the third layer has **64 neurons with ReLU activation**, and the fourth layer has **1 neuron** without any activation.
+
 ```bash
 model4 = Sequential([
     Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
@@ -130,6 +142,9 @@ models.append(model4)
 ```
 
 **Model 5**:
+
+**Sequential** type model, consisting of **5 dense layers**. The first four layers have **64 neurons with ReLU activation**. The fifth layer has **1 neuron** with no activation at all.
+
 ```bash
 model5 = Sequential([
     Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
@@ -142,7 +157,7 @@ models.append(model5)
 ```
 
 
-### Trenowanie modelów i wyświetlenie wyników
+### Training models and displaying results
 
 ```bash
 for i, model in enumerate(models, start=1):
@@ -179,12 +194,12 @@ for i, model in enumerate(models, start=1):
 ```
 
 **Model 1**:
-- **Zbiór treningowy:**
+- **Training set:**
     * MAE: 133382.21875
     * MSE: 67452256256.0
     * RMSE: 259715.7220038864
     * R2: 0.6799250734982716
-- **Zbiór testowy:**
+- **Test set:**
     * MAE: 131144.328125
     * MSE: 65625067520.0
     * RMSE: 256173.9009345019
@@ -194,12 +209,12 @@ for i, model in enumerate(models, start=1):
 
 
 **Model 2**:
-- **Zbiór treningowy:**
+- **Training set:**
     * MAE: 127108.5625
     * MSE: 60705611776.0
     * RMSE: 246385.0883799586
     * R2: 0.7119394830095441
-- **Zbiór testowy:**
+- **Test set:**
     * MAE: 125159.0859375
     * MSE: 58691358720.0
     * RMSE: 242262.99494557563
@@ -209,12 +224,12 @@ for i, model in enumerate(models, start=1):
 
 
 **Model 3**:
-- **Zbiór treningowy:**
+- **Training set:**
     * MAE: 132783.75
     * MSE: 67626471424.0
     * RMSE: 260050.90160197485
     * R2: 0.6790983662673938
-- **Zbiór testowy:**
+- **Test set:**
     * MAE: 130958.796875
     * MSE: 65878700032.0
     * RMSE: 256668.46325951305
@@ -224,12 +239,12 @@ for i, model in enumerate(models, start=1):
 
 
 **Model 4**:
-- **Zbiór treningowy:**
+- **Training set:**
     * MAE: 126462.9453125
     * MSE: 61010079744.0
     * RMSE: 247002.18570692852
     * R2: 0.7104945113348253
-- **Zbiór testowy:**
+- **Test set:**
     * MAE: 124352.7578125
     * MSE: 59110133760.0
     * RMSE: 243125.7570887955
@@ -239,12 +254,12 @@ for i, model in enumerate(models, start=1):
 
 
 **Model 5**:
-- **Zbiór treningowy:**
+- **Training set:**
     * MAE: 123051.4453125
     * MSE: 56869249024.0
     * RMSE: 238472.74272754948
     * R2: 0.7301435949288448
-- **Zbiór testowy:**
+- **Test set:**
     * MAE: 121221.3515625
     * MSE: 53265031168.0
     * RMSE: 230792.18177399336
@@ -253,13 +268,14 @@ for i, model in enumerate(models, start=1):
 ![10](github-img/10.png)
 
 
-### Wnioski
+### Conclusions
 
-Model 5 wydaje się być najlepszym modelem, osiągając najniższe błędy oraz najwyższy współczynnik determinacji na obu zbiorach danych. Współczynnik determinacji (R2) dla wszystkich modeli oscyluje wokół 0.70, co oznacza, że modele są w stanie wyjaśnić około 70% zmienności danych, co jest umiarkowanie zadowalające. Modele 2, 4 i 5 wykazują lepsze wyniki niż modele 1 i 3 zarówno na zbiorze treningowym, jak i testowym, wyrażone niższymi błędami (MAE, MSE, RMSE) oraz wyższym współczynnikiem determinacji (R2). Modele 2, 4 i 5 mogą być preferowanymi modelami. Podsumowując, wyniki nie są idealne, lecz są satysfakcjonujące.
+**Model 5** appears to be the best model, achieving the lowest errors and the highest coefficient of determination on both datasets. The coefficient of determination (*R2*) for all models is around **0.70**, which means that the models are able to explain about **70%** of the data variability, which is moderately satisfactory. Models **2, 4 and 5** show better results than models **1 and 3** on both the training and test sets, expressed in lower errors (*MAE, MSE, RMSE*) and higher coefficient of determination (*R2*). Models **2, 4 and 5** may be preferred models. It is worth noting that although there is some improvement in subsequent models, the differences in results are not significant, suggesting that further model testing may be necessary to obtain more significant improvements. In summary, the results are not perfect, but they are satisfactory.
 
-### Propozycje dalszego rozwoju projektu
-- Dalsze testowanie różnych architektur sieci neuronowych oraz hiperparametrów, w celu znalezienia optymalnego modelu z lepszymi wynikami.
-- Testowanie innych algorytmów uczenia maszynowego, które mogą dobrze radzić sobie z danymi i przewidywaniami cen mieszkań.
-- Eksploracja dodatkowych cech, które mogą poprawić jakość przewidywań.
-- Zastosowanie bardziej zaawansowanych technik optymalizacji, takich jak optymalizacja gęstości sieci, aby zoptymalizować wydajność modelu.
-- Zastosowanie zaawansowanych technik regularyzacji, aby uniknąć przetrenowania.
+
+### Proposals for further development of the project
+- Further testing of different neural network architectures and hyperparameters to find the optimal model with better results.
+- Testing other machine learning algorithms that can perform well on housing price data and predictions.
+- Exploration of additional features that can improve the quality of predictions.
+- Applying more advanced optimization techniques such as network density optimization to optimize model performance.
+- Use of advanced regularization techniques to avoid overtraining.
